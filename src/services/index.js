@@ -4,10 +4,19 @@ import createError from "http-errors";
 import createHttpError from "http-errors"
 import multer from "multer";
 import blogModel from "./schema.js"
+import { CloudinaryStorage } from "multer-storage-cloudinary"
+import { v2 as cloudinary } from "cloudinary"
 
 //get blogs
 const blogsRouter = express.Router();
 
+const cloudinaryStorage = new CloudinaryStorage({
+    cloudinary, // CREDENTIALS, this line of code is going to search in your process.env for something called CLOUDINARY_URL
+    params: {
+      folder: "Mongo",
+    },
+  })
+  
 blogsRouter.get("/", async (req, res, next) => {
   try {
     
@@ -30,6 +39,20 @@ blogsRouter.post("/", async (req, res, next) => {
       next(error);
     }
   });
+  // image post
+  blogsRouter.post("/:blogId/uploadCloudinary", multer({ storage: cloudinaryStorage }).single("image"), async (req, res, next) => {
+    try {
+        const id = req.params.blogId
+      const result = await blogModel.findByIdAndUpdate(id,req.body,{new:true})
+        
+      res.send({result})
+    } catch (error) {
+      next(error)
+    }
+  })
+
+
+  //grt by id
   blogsRouter.get("/:blogId", async (req, res, next) => {
     try {
         const id = req.params.blogId
@@ -47,6 +70,8 @@ blogsRouter.post("/", async (req, res, next) => {
       next(error);
     }
   });
+  
+  
   blogsRouter.put("/:blogId", async (req, res, next) => {
     try {
      
@@ -80,6 +105,7 @@ blogsRouter.post("/", async (req, res, next) => {
     }
   });
 
+  
 
 
   export default blogsRouter
