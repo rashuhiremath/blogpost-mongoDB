@@ -11,7 +11,7 @@ import { v2 as cloudinary } from "cloudinary"
 const blogsRouter = express.Router();
 
 const cloudinaryStorage = new CloudinaryStorage({
-    cloudinary, // CREDENTIALS, this line of code is going to search in your process.env for something called CLOUDINARY_URL
+    cloudinary, 
     params: {
       folder: "Mongo",
     },
@@ -40,10 +40,12 @@ blogsRouter.post("/", async (req, res, next) => {
     }
   });
   // image post
-  blogsRouter.post("/:blogId/uploadCloudinary", multer({ storage: cloudinaryStorage }).single("image"), async (req, res, next) => {
+  blogsRouter.put("/:blogId/uploadCloudinary", multer({ storage: cloudinaryStorage }).single("image"), async (req, res, next) => {
     try {
+        req.body.cover = req.file.path
+        console.log(req.body.cover)
         const id = req.params.blogId
-      const result = await blogModel.findByIdAndUpdate(id,req.body,{new:true})
+      const result = await blogModel.findByIdAndUpdate(id, req.body.cover,{new:true})
         
       res.send({result})
     } catch (error) {
