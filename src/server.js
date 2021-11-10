@@ -1,6 +1,7 @@
 import express from "express"
 import listEndpoints from "express-list-endpoints";
 import blogsRouter from "./services/index.js"
+import commentRouter from "./services/comments/index.js";
 import cors from "cors";
 import  mongoose from "mongoose";
 
@@ -12,6 +13,7 @@ server.use(cors())
 server.use(express.json())
 
 server.use("/blogPosts",blogsRouter)
+server.use("/comments", commentRouter )
 
 const port = process.env.PORT
 
