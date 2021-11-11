@@ -4,6 +4,7 @@ import express from "express";
 import createHttpError from "http-errors"
 //import multer from "multer";
 import commentModel from "./schema.js"
+import q2m from "query-to-mongo"
 
 
 const commentRouter = express.Router();
@@ -25,8 +26,13 @@ commentRouter.post("/",async(req,res,next)=>{
 // get
 commentRouter.get("/",async(req,res,next)=>{
     try {
-        const comments = await commentModel.find()
-        res.status(200).send(comments)
+        const mongoQuery = q2m(req.query)
+        const total = await commentModel.countDocuments(mongoQuery.criteria)
+        const comments = await commentModel.find(mongoQuery.criteria)
+        .limit(mongoQuery.options.limit)
+        .skip(mongoQuery.options.skip)
+        .sort(mongoQuery.options.sort)
+        res.status(200).send({links: mongoQuery.links("/comments",total),pageNum : Math.ceil(total / mongoQuery.options.limit ),total,comments})
 
         
     } catch (error) {
