@@ -8,7 +8,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 import commentModel from "../services/comments/schema.js";
 import q2m from "query-to-mongo"
-import authorModel from "../services/authors/schema.js"
+//import authorModel from "../services/authors/schema.js"
 
 //get blogs
 const blogsRouter = express.Router();
