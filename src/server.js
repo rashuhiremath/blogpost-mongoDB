@@ -5,6 +5,7 @@ import commentRouter from "./services/comments/index.js";
 import cors from "cors";
 import  mongoose from "mongoose";
 import authorRouter from "./services/authors/index.js";
+import { unauthorizedHandler, forbiddenHandler, catchAllHandler } from "./services/errorHandler.js"
 
 
 
@@ -16,6 +17,13 @@ server.use(express.json())
 server.use("/blogPosts",blogsRouter)
 server.use("/comments", commentRouter )
 server.use("/authors",authorRouter)
+
+
+
+server.use(unauthorizedHandler)
+server.use(forbiddenHandler)
+server.use(catchAllHandler)
+
 
 const port = process.env.PORT
 
