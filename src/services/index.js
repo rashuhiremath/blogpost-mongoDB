@@ -32,7 +32,7 @@ blogsRouter.get("/", async (req, res, next) => {
     .limit(mongoQuery.options.limit)
     .skip(mongoQuery.options.skip)
     .sort(mongoQuery.options.sort)
-    .populate({path:"author", select:"name avatar" })
+    .populate({path:"author", select:"name avatar" }).populate({path:"likes", select:"_id"})
 
     res.status(200).send({links: mongoQuery.links("/blogPosts",totalBlogs), pageTotal: Math.ceil(totalBlogs / mongoQuery.options.limit),totalBlogs,blogs});
   } catch (error) {
