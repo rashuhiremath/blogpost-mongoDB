@@ -10,7 +10,9 @@ const AuthorSchema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, default: "User", enum: ["User", "Admin"] },
-  },
+  
+  
+},
   {
     timestamps: true,
   }
@@ -33,11 +35,11 @@ AuthorSchema.methods.toJSON = function () {
   return authorObject;
 };
 
-AuthorSchema.statics.checkTheCredentials = async function (email, password) {
-  const author = await this.findOne({ email });
+ AuthorSchema.statics.checkTheCredentials = async function (email, password) {
+  const author = await this.findOne({email});
 
   if (author) {
-    const matchAuthor = await bcrypt.compare(password, author.password);
+    const matchAuthor = await bcrypt.compare(password,author.password);
     if (matchAuthor) {
       return author;
     } else {

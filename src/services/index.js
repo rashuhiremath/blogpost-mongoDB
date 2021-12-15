@@ -8,6 +8,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 import commentModel from "../services/comments/schema.js";
 import q2m from "query-to-mongo"
+import {basicAuthMiddleware} from "./authorization/basicAuth.js"
 //import authorModel from "../services/authors/schema.js"
 
 //get blogs
@@ -41,7 +42,7 @@ blogsRouter.get("/", async (req, res, next) => {
 });
 
 // post
-blogsRouter.post("/", async (req, res, next) => {
+blogsRouter.post("/",basicAuthMiddleware, async (req, res, next) => {
   try {
     const newBlog = new blogModel(req.body);
     const { _id } = await newBlog.save();
@@ -88,7 +89,7 @@ blogsRouter.get("/:blogId", async (req, res, next) => {
   }
 });
 
-blogsRouter.put("/:blogId", async (req, res, next) => {
+blogsRouter.put("/:blogId",basicAuthMiddleware, async (req, res, next) => {
   try {
     const id = req.params.blogId;
     const updatedBlog = await blogModel.findByIdAndUpdate(id, req.body, {
@@ -104,7 +105,7 @@ blogsRouter.put("/:blogId", async (req, res, next) => {
     next(error);
   }
 });
-blogsRouter.delete("/:blogId", async (req, res, next) => {
+blogsRouter.delete("/:blogId",basicAuthMiddleware, async (req, res, next) => {
   try {
     const id = req.params.blogId;
     const deleteBlog = await blogModel.findByIdAndDelete(id);
