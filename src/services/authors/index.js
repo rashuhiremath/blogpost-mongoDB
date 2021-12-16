@@ -6,6 +6,7 @@ import blogModel from "./schema.js"
 import {tokenAuthenticate} from "../authorization/tools.js"
 import {JWTtokenMiddleware} from "../authorization/token.js"
 //import {JWTtokenMiddleware} from "../authorization/token"
+import passport from "passport"
 
 
 const authorRouter = express.Router()
@@ -34,6 +35,22 @@ authorRouter.get("/register",JWTtokenMiddleware  ,async (req,res,next)=>{
         next(error)
     }
     })
+
+    //google login
+    authorRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profile", "email"] })) 
+
+authorRouter.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
+ 
+  try {
+    
+    console.log("TOKENS: ", req.author.tokens)
+
+    res.redirect(`${process.env.FE_URL}?accessToken=${req.author.tokens.accessToken}&refreshToken=${req.author.tokens.refreshToken}`)
+  } catch (error) {
+    next(error)
+  }
+})
+
 
     authorRouter.get("/me", JWTtokenMiddleware , async (req, res, next) => {
         try {

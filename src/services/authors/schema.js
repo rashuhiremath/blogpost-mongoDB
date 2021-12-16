@@ -5,11 +5,12 @@ const { Schema, model } = mongoose;
 
 const AuthorSchema = new Schema(
   {
-    name: { type: String, required: true },
-    avatar: { type: String, required: true },
+    name: { type: String,},
+    avatar: { type: String},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, default: "User", enum: ["User", "Admin"] },
+    googleId:{type:String,required:true}
   
   
 },
